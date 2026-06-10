@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VisionTrack AI — Intelligent Object Monitoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔭</text></svg>" />
+</head>
+<body>
+
+<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
+<header class="app-header">
+  <div class="header-inner">
+
+    <!-- Brand -->
+    <div class="header-brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="18" cy="18" r="16" stroke="url(#lg1)" stroke-width="2"/>
+          <circle cx="18" cy="18" r="8"  stroke="url(#lg1)" stroke-width="1.5" stroke-dasharray="3 2"/>
+          <circle cx="18" cy="18" r="3"  fill="url(#lg1)"/>
+          <line x1="18" y1="2"  x2="18" y2="8"  stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="18" y1="28" x2="18" y2="34" stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="2"  y1="18" x2="8"  y2="18" stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="28" y1="18" x2="34" y2="18" stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="lg1" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3b82f6"/>
+              <stop offset="1" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">VisionTrack <em>AI</em></span>
+        <span class="brand-sub">Intelligent Object Monitoring &amp; Analytics</span>
+      </div>
+    </div>
+
+    <!-- Right: clock + status -->
+    <div class="header-right">
+      <div class="header-clock">
+        <span class="clock-date" id="hdr-date"></span>
+        <span class="clock-time" id="hdr-time"></span>
+      </div>
+      <div class="header-status-pill" id="hdr-status-pill">
+        <span class="status-dot" id="hdr-dot"></span>
+        <span id="hdr-status-text">Initialising</span>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ═════════════════════════════════ MAIN ═════════════════════════════════ -->
+<main class="app-main">
+
+  <!-- ── LEFT COLUMN: video feed + controls ──────────────────────────────── -->
+  <section class="col col-video">
+
+    <!-- Video panel -->
+    <div class="glass-card video-card">
+      <div class="video-card-top">
+        <div class="video-title-group">
+          <span class="live-badge" id="live-badge">
+            <span class="live-dot"></span>LIVE
+          </span>
+          <span class="video-label">Monitor Feed</span>
+        </div>
+        <div class="video-actions">
+          <button class="icon-btn" id="btn-snapshot" onclick="takeSnapshot()" title="Snapshot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </button>
+          <button class="icon-btn" id="btn-fullscreen" onclick="toggleFullscreen()" title="Fullscreen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="video-wrapper" id="video-wrapper">
+        <img id="video-stream" src="/video_feed" alt="Live monitoring feed" class="video-stream" />
+        <div class="video-overlay" id="video-overlay">
+          <div class="overlay-inner">
+            <div class="overlay-icon-wrap">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="28" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6 4"/>
+                <circle cx="32" cy="32" r="14" stroke="#06b6d4" stroke-width="1.5"/>
+                <circle cx="32" cy="32" r="4"  fill="#3b82f6"/>
+                <line x1="32" y1="4"  x2="32" y2="18" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+                <line x1="32" y1="46" x2="32" y2="60" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+                <line x1="4"  y1="32" x2="18" y2="32" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+                <line x1="46" y1="32" x2="60" y2="32" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <p class="overlay-title">No Source Active</p>
+            <p class="overlay-hint">Start the camera or upload a video file to begin monitoring</p>
+          </div>
+        </div>
+        <!-- Corner scan lines for aesthetics -->
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="glass-card controls-card">
+      <p class="controls-label">Input Source</p>
+      <div class="controls-grid">
+        <button class="btn btn-primary" id="btn-start-cam" onclick="startCamera()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Camera
+        </button>
+        <button class="btn btn-danger" id="btn-stop" onclick="stopCamera()" disabled>
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+          Stop
+        </button>
+        <label class="btn btn-secondary" for="file-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload Video
+          <input type="file" id="file-input" accept=".mp4,.avi,.mov,.mkv,.webm"
+                 style="display:none" onchange="uploadVideo(this)" />
+        </label>
+        <button class="btn btn-outline" onclick="resetSystem()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+          Reset
+        </button>
+      </div>
+
+      <!-- Upload progress -->
+      <div class="upload-bar-wrap" id="upload-bar-wrap" style="display:none">
+        <div class="upload-bar-track">
+          <div class="upload-bar" id="upload-bar"></div>
+        </div>
+        <span class="upload-label" id="upload-label">Uploading…</span>
+      </div>
+    </div>
+
+    <!-- Monitored categories -->
+    <div class="glass-card categories-card">
+      <p class="controls-label">Monitored Categories</p>
+      <div class="class-legend">
+        <span class="class-chip" style="--c:#00c8ff">Person</span>
+        <span class="class-chip" style="--c:#00e676">Car</span>
+        <span class="class-chip" style="--c:#ffa726">Bus</span>
+        <span class="class-chip" style="--c:#ff7043">Truck</span>
+        <span class="class-chip" style="--c:#ce93d8">Motorcycle</span>
+        <span class="class-chip" style="--c:#4dd0e1">Bicycle</span>
+        <span class="class-chip" style="--c:#fff176">Dog</span>
+        <span class="class-chip" style="--c:#80cbc4">Cat</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── RIGHT COLUMN: stats + overview ─────────────────────────────────── -->
+  <section class="col col-stats">
+
+    <!-- KPI cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-blue" title="Frames processed per second">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="kpi-body">
+          <div class="kpi-value" id="stat-fps">—</div>
+          <div class="kpi-label">Processing Speed</div>
+          <div class="kpi-unit">frames / sec</div>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-cyan">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="kpi-body">
+          <div class="kpi-value" id="stat-objects">—</div>
+          <div class="kpi-label">Objects Detected</div>
+          <div class="kpi-unit">current frame</div>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-green">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="kpi-body">
+          <div class="kpi-value" id="stat-tracks">—</div>
+          <div class="kpi-label">Active Tracks</div>
+          <div class="kpi-unit">unique IDs</div>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <div class="kpi-body">
+          <div class="kpi-value" id="stat-source">—</div>
+          <div class="kpi-label">Source Status</div>
+          <div class="kpi-unit">input channel</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Overview -->
+    <div class="glass-card overview-card">
+      <div class="overview-header">
+        <p class="controls-label">System Overview</p>
+        <span class="overview-status-dot" id="overview-dot"></span>
+      </div>
+
+      <div class="overview-status-banner" id="overview-banner">
+        <span class="overview-banner-dot" id="banner-dot"></span>
+        <span id="banner-text">Initialising system…</span>
+      </div>
+
+      <div class="overview-rows">
+        <div class="overview-row">
+          <span class="ov-label">Current Source</span>
+          <span class="ov-value" id="ov-source">—</span>
+        </div>
+        <div class="overview-row">
+          <span class="ov-label">Objects Detected</span>
+          <span class="ov-value" id="ov-objects">—</span>
+        </div>
+        <div class="overview-row">
+          <span class="ov-label">Active Tracking</span>
+          <span class="ov-value" id="ov-tracks">—</span>
+        </div>
+        <div class="overview-row">
+          <span class="ov-label">Processing Speed</span>
+          <span class="ov-value" id="ov-fps">—</span>
+        </div>
+        <div class="overview-row">
+          <span class="ov-label">Last Updated</span>
+          <span class="ov-value" id="ov-updated">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FPS chart -->
+    <div class="glass-card chart-card">
+      <p class="controls-label">Processing Speed History</p>
+      <canvas id="fps-chart"></canvas>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="app-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-logo">🔭</span>
+      <div>
+        <span class="footer-name">VisionTrack AI</span>
+        <span class="footer-desc">AI-Powered Monitoring Dashboard</span>
+      </div>
+    </div>
+    <div class="footer-status">
+      <span class="footer-dot"></span>
+      System Running Normally
+    </div>
+  </div>
+</footer>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
